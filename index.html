@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ja"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="アクアポニックス記録">
+<title>アクアポニックス記録</title>
+<style>
+:root{--g:#2e6b4f;--g2:#e5f0ea;--o:#d9822b;--bd:#dfe3e0;--tx:#26302b;--sub:#6d7671;--bg:#f5f6f4}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN",sans-serif;color:var(--tx);background:var(--bg);font-size:15px}
+header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:8px;padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top))}
+header h1{flex:1;margin:0;font-size:17px;text-align:center}
+header button{min-width:56px}
+main{max-width:720px;margin:0 auto;padding:12px 12px 110px}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:5;background:#fff;border-top:1px solid var(--bd);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;border:0;background:none;padding:10px 0 12px;font-size:12px;color:var(--sub)}
+nav button.on{color:var(--g);font-weight:700;box-shadow:inset 0 3px 0 var(--g)}
+button{font:inherit;cursor:pointer}
+.btn{border:1px solid var(--bd);background:#fff;border-radius:8px;padding:8px 14px}
+.btn.pri{background:var(--g);border-color:var(--g);color:#fff}
+.btn.warn{color:#b03a2e;border-color:#e3b5b0}
+.lnk{border:0;background:none;color:var(--g);padding:6px}
+.fab{position:fixed;right:18px;bottom:78px;z-index:6;background:var(--o);color:#fff;border:0;border-radius:28px;padding:14px 22px;font-weight:700;box-shadow:0 3px 10px rgba(0,0,0,.2)}
+.day{font-weight:700;margin:16px 2px 8px}
+.card{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:10px}
+.rec{display:flex;gap:12px;cursor:pointer}
+.rec .tm{width:52px;text-align:center;color:var(--sub);font-size:13px;flex:none}
+.kind{display:inline-block;border-radius:6px;padding:2px 8px;color:#fff;font-size:12px;font-weight:700}
+.rec h3{margin:0 0 4px;font-size:16px}
+.meta{color:var(--sub);font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{border:1px solid #b9d3c4;border-radius:6px;padding:3px 8px;font-size:13px;background:#fafcfb}
+.chip b{font-weight:700}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px dotted var(--bd)}
+.row:last-child{border-bottom:0}
+.tag{display:inline-block;background:var(--g2);color:var(--g);border-radius:10px;padding:1px 8px;font-size:11px;margin-left:6px}
+.val{font-weight:700;font-size:18px;white-space:nowrap}.val small{font-weight:400;font-size:12px;color:var(--sub);margin-left:2px}
+label{display:block;font-size:13px;color:var(--sub);margin:12px 0 4px}
+input,select,textarea{font:inherit;width:100%;padding:9px;border:1px solid var(--bd);border-radius:8px;background:#fff}
+textarea{min-height:70px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mem{display:flex;flex-wrap:wrap;gap:6px}
+.mem label{margin:0;display:flex;align-items:center;gap:4px;border:1px solid var(--bd);border-radius:16px;padding:5px 10px;color:var(--tx);font-size:14px;background:#fff}
+.mem input{width:auto}
+.it{display:grid;grid-template-columns:1fr 110px;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dotted var(--bd)}
+.it span{font-size:14px}
+.acts{display:flex;gap:8px;align-items:center;margin-top:16px}.sp{flex:1}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:6px}
+.tabs button{white-space:nowrap;border:1px solid var(--bd);background:#fff;border-radius:16px;padding:5px 12px;font-size:13px}
+.tabs button.on{background:var(--g);color:#fff;border-color:var(--g)}
+table{width:100%;border-collapse:collapse;font-size:14px;background:#fff}
+th,td{border-bottom:1px solid var(--bd);padding:7px 6px;text-align:right}
+th:first-child,td:first-child{text-align:left}
+th{background:#f0f3f1;font-size:12px;color:var(--sub)}
+.dash{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.dash .card{margin:0}
+.dash .nm{font-size:12px;color:var(--sub);min-height:30px}
+.up{color:#b03a2e}.dn{color:#2471a3}
+.menu .card{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+#msg{position:fixed;left:12px;right:12px;bottom:130px;z-index:9;background:#26302b;color:#fff;border-radius:8px;padding:10px 12px;font-size:14px}
+.err{color:#ffb3a7}
+.empty{text-align:center;color:var(--sub);padding:30px 0}
+iframe{width:100%;height:240px;border:0;border-radius:8px}
+svg text{font-size:11px;fill:#6d7671}
+@media print{header,nav,.fab,.noprint{display:none!important}main{padding:0}body{background:#fff}}
+</style>
+</head><body>
+<header><button id="back" class="lnk" hidden>戻る</button><h1 id="ttl">記録一覧</h1><button id="reload" class="lnk">更新</button></header>
+<main id="m"><div class="empty">読み込み中…</div></main>
+<button id="fab" class="fab">記録する</button>
+<nav id="nav">
+ <button data-v="list" class="on">記録一覧</button><button data-v="graph">グラフ</button><button data-v="dash">ダッシュボード</button><button data-v="report">レポート</button><button data-v="menu">メニュー</button>
+</nav>
+<div id="msg" hidden></div>
+<script>
+// GitHub Pages で開いたときは、Googleのアプリへ fetch でつなぐ（google.script.run と同じ形で呼べるようにする）
+(function(){
+ if(window.google&&google.script&&google.script.run)return;
+ var API='https://script.google.com/macros/s/AKfycbzasGlbDrISSMUQVRkoxWOGL4Yst19OKLIV21zPZroQDs_e3KjmRx5qpUMdxCVQXGyh/exec';
+ var q=new URLSearchParams(location.search),k=q.get('k')||'';
+ try{if(k)localStorage.setItem('aqpKey',k);else k=localStorage.getItem('aqpKey')||''}catch(e){}
+ if(k&&!q.get('k')){history.replaceState(null,'',location.pathname+'?k='+encodeURIComponent(k))}
+ window.google={script:{get run(){var h={ok:null,ng:null};var p=new Proxy({},{get:function(t,name){
+  if(name==='withSuccessHandler')return function(f){h.ok=f;return p};
+  if(name==='withFailureHandler')return function(f){h.ng=f;return p};
+  return function(){var args=[].slice.call(arguments);
+   if(!k){h.ng&&h.ng({message:'合言葉つきのURLで開いてください'});return}
+   fetch(API,{method:'POST',body:JSON.stringify({fn:name,args:args,key:k}),redirect:'follow'})
+    .then(function(r){return r.json()})
+    .then(function(j){if(j&&j.ok){h.ok&&h.ok(j.result)}else{h.ng&&h.ng({message:(j&&j.error)||'読み込めませんでした'})}})
+    .catch(function(){h.ng&&h.ng({message:'通信できませんでした。電波のよいところで「更新」を押してください'})})}}});return p}}};
+})();
+</script>
+<script>
+const $=id=>document.getElementById(id),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const WD='日月火水木金土';
+const KCOL={'環境チェック':'#9a9a1f','播種':'#9b7a3c','定植':'#4f8f3a','収穫':'#c0602a','給餌':'#2f7fa8','魚の様子':'#3b6aa0','作業':'#6d6d6d'};
+const kcol=k=>KCOL[k]||'#5d6d7e';
+let D={records:[],items:[],places:[],members:[]},view='list',stack=[],me='';
+try{me=localStorage.getItem('aqpMe')||''}catch(e){}
+
+function msg(t,err){const e=$('msg');e.hidden=false;e.innerHTML=err?'<span class="err">'+esc(t)+'</span>':esc(t);clearTimeout(msg.t);msg.t=setTimeout(()=>e.hidden=true,err?6000:2500)}
+function call(fn,args,ok){google.script.run.withSuccessHandler(ok).withFailureHandler(e=>msg(e.message||String(e),true))[fn](...args)}
+function load(){call('getAll',[],r=>{D=r;D.records.sort((a,b)=>(b.date+b.start).localeCompare(a.date+a.start));render()})}
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const hm=()=>{const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+function jday(s){const d=new Date(s+'T00:00');if(isNaN(d))return s;return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日（'+WD[d.getDay()]+'）'}
+const kinds=()=>{const o=[];D.items.forEach(x=>{if(!o.includes(x.kind))o.push(x.kind)});return o};
+const itemsOf=k=>D.items.filter(x=>x.kind===k).sort((a,b)=>a.ord-b.ord);
+const unitOf=(k,n)=>{const x=D.items.find(i=>i.kind===k&&i.name===n);return x?x.unit:''};
+const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isNaN(n)?null:n};
+const mins=(a,b)=>{if(!a||!b)return '';const[x,y]=a.split(':').map(Number),[p,q]=b.split(':').map(Number);const m=p*60+q-(x*60+y);return m>=0?m+'分':''};
+
+function setView(v,title){view=v;stack=[];$('back').hidden=true;$('ttl').textContent=title||{list:'記録一覧',graph:'グラフ',dash:'ダッシュボード',report:'レポート',menu:'メニュー'}[v];
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));$('fab').hidden=false;render()}
+function sub(title,fn){stack.push({title:$('ttl').textContent,fn:curFn});curFn=fn;$('ttl').textContent=title;$('back').hidden=false;window.scrollTo(0,0);fn()}
+let curFn=null;
+$('back').onclick=()=>{const s=stack.pop();if(!s)return;curFn=s.fn;$('ttl').textContent=s.title;$('back').hidden=!stack.length;$('fab').hidden=false;if(stack.length)s.fn();else render()};
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>setView(b.dataset.v));
+$('reload').onclick=()=>{msg('読み込み中…');load()};
+$('fab').onclick=()=>editRec(null);
+function render(){curFn=null;$('fab').hidden=false;({list:vList,graph:vGraph,dash:vDash,report:vReport,menu:vMenu}[view])()}
+
+// ---- 記録一覧 ----
+let fKind='',fPlace='';
+function vList(){
+ const ks=kinds();let h='<div class="tabs noprint"><button data-k="" class="'+(fKind?'':'on')+'">すべて</button>'+ks.map(k=>'<button data-k="'+esc(k)+'" class="'+(fKind===k?'on':'')+'">'+esc(k)+'</button>').join('')+'</div>';
+ if(D.places.length>1)h+='<select id="fp" class="noprint"><option value="">すべての場所</option>'+D.places.map(p=>'<option'+(fPlace===p.name?' selected':'')+'>'+esc(p.name)+'</option>').join('')+'</select>';
+ const rs=D.records.filter(r=>(!fKind||r.kind===fKind)&&(!fPlace||r.place===fPlace));
+ if(!rs.length)h+='<div class="empty">記録はまだありません。右下の「記録する」から入れてください。</div>';
+ let last='';
+ rs.slice(0,300).forEach(r=>{if(r.date!==last){h+='<div class="day">'+jday(r.date)+'</div>';last=r.date}h+=recCard(r)});
+ $('m').innerHTML=h;
+ $('m').querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{fKind=b.dataset.k;vList()});
+ if($('fp'))$('fp').onchange=e=>{fPlace=e.target.value;vList()};
+ $('m').querySelectorAll('.rec').forEach(c=>c.onclick=()=>showRec(c.dataset.id));
+}
+function recCard(r){
+ const vs=Object.keys(r.vals||{}).filter(k=>r.vals[k]!=='');
+ return '<div class="card rec" data-id="'+esc(r.id)+'"><div class="tm">'+esc(r.start)+(r.end?'<br>|<br>'+esc(r.end):'')+'</div><div style="flex:1;min-width:0">'+
+  '<h3><span class="kind" style="background:'+kcol(r.kind)+'">'+esc(r.kind)+'</span></h3>'+
+  '<div class="meta">'+esc(r.place)+(r.members?'　'+esc(r.members):'')+'</div>'+
+  (vs.length?'<div class="chips">'+vs.slice(0,8).map(k=>'<span class="chip">'+esc(short(k))+' <b>'+esc(r.vals[k])+'</b></span>').join('')+(vs.length>8?'<span class="chip">ほか'+(vs.length-8)+'件</span>':'')+'</div>':'')+
+  (r.memo?'<div class="meta" style="margin-top:6px">'+esc(r.memo.slice(0,60))+'</div>':'')+
+  (r.comments&&r.comments.length?'<div class="meta" style="margin-top:6px">コメント '+r.comments.length+'件</div>':'')+'</div></div>';
+}
+const short=n=>{const m=n.match(/\[([^\]]+)\]/);return m?m[1]:n.replace(/^水中\s*/,'')};
+
+function showRec(id){
+ const r=D.records.find(x=>x.id===id);if(!r)return;
+ sub('記録',()=>{
+  const its=itemsOf(r.kind),filled=its.filter(i=>(r.vals[i.name]||'')!==''),other=Object.keys(r.vals).filter(k=>r.vals[k]!==''&&!its.some(i=>i.name===k));
+  const blank=its.length-filled.length;
+  let h='<div class="card">'+
+   '<div class="row"><span>日付</span><span style="text-align:right">'+jday(r.date)+'<br><span class="meta">'+esc(r.start)+(r.end?' - '+esc(r.end):'')+' '+mins(r.start,r.end)+'</span></span></div>'+
+   '<div class="row"><span>場所</span><span>'+esc(r.place)+'</span></div>'+
+   '<div class="row"><span>メンバー</span><span>'+esc(r.members)+'</span></div></div>'+
+   '<div class="card"><h3 style="margin:0 0 6px"><span class="kind" style="background:'+kcol(r.kind)+'">'+esc(r.kind)+'</span></h3>'+
+   filled.map(i=>'<div class="row"><span>'+esc(i.name)+'<span class="tag">'+esc(i.tag)+'</span></span><span class="val">'+esc(r.vals[i.name])+'<small>'+esc(i.unit)+'</small></span></div>').join('')+
+   other.map(k=>'<div class="row"><span>'+esc(k)+'</span><span class="val">'+esc(r.vals[k])+'</span></div>').join('')+
+   (blank?'<div class="meta" style="margin-top:8px">未記入の項目 '+blank+'件</div>':'')+'</div>'+
+   '<div class="card"><div class="meta">メモ</div><div style="white-space:pre-wrap;margin-top:4px">'+esc(r.memo||'（なし）')+'</div></div>'+
+   '<div class="card"><div class="meta">コメント</div>'+(r.comments||[]).map(c=>'<div class="row" style="display:block"><div class="meta">'+esc(c.name)+'　'+esc(c.at)+'</div><div style="white-space:pre-wrap">'+esc(c.text)+'</div></div>').join('')+
+   '<textarea id="ct" placeholder="コメントを書く"></textarea><div class="acts"><span class="sp"></span><button class="btn pri" id="cs">コメントする</button></div></div>'+
+   '<div class="acts"><button class="btn warn" id="rd">この記録を消す</button><span class="sp"></span><button class="btn pri" id="re">編集する</button></div>'+
+   '<div class="meta" style="margin-top:10px">登録：'+esc(r.by)+'　'+esc(r.at)+'</div>';
+  $('m').innerHTML=h;$('fab').hidden=true;
+  $('cs').onclick=()=>{const t=$('ct').value.trim();if(!t)return;const nm=me||'（名前未設定）';call('addComment',[r.id,nm,t],()=>{r.comments=(r.comments||[]).concat({name:nm,at:'いま',text:t});msg('コメントしました');curFn()})};
+  $('re').onclick=()=>editRec(r);
+  $('rd').onclick=()=>{if(!confirm('この記録を消しますか？（スプレッドシートには印つきで残ります）'))return;call('deleteRecord',[r.id],()=>{D.records=D.records.filter(x=>x!==r);msg('消しました');stack=[];$('back').hidden=true;$('ttl').textContent='記録一覧';render()})};
+ });
+}
+
+// ---- 記録する／編集 ----
+function editRec(r){
+ const ks=kinds(),isNew=!r;
+ r=r?JSON.parse(JSON.stringify(r)):{date:today(),start:hm(),end:'',place:(D.places[0]||{}).name||'',members:me,kind:ks[0]||'環境チェック',vals:{},memo:''};
+ sub(isNew?'記録する':'記録の編集',()=>{
+  const mem=r.members?r.members.split('、'):[];
+  let h='<div class="card"><label>種類</label><select id="ek">'+ks.map(k=>'<option'+(k===r.kind?' selected':'')+'>'+esc(k)+'</option>').join('')+'</select>'+
+   '<label>日付</label><input type="date" id="ed" value="'+esc(r.date)+'">'+
+   '<div class="grid2"><div><label>開始</label><input type="time" id="es" value="'+esc(r.start)+'"></div><div><label>終了</label><input type="time" id="ee" value="'+esc(r.end)+'"></div></div>'+
+   '<label>場所</label><select id="ep">'+D.places.map(p=>'<option'+(p.name===r.place?' selected':'')+'>'+esc(p.name)+'</option>').join('')+'</select>'+
+   '<label>メンバー</label><div class="mem">'+D.members.map(m=>'<label><input type="checkbox" value="'+esc(m.name)+'"'+(mem.includes(m.name)?' checked':'')+'>'+esc(m.name)+'</label>').join('')+'</div></div>'+
+   '<div class="card" id="ev"></div>'+
+   '<div class="card"><label style="margin-top:0">メモ</label><textarea id="em">'+esc(r.memo)+'</textarea></div>'+
+   '<div class="acts"><span class="sp"></span><button class="btn pri" id="esv">保存</button></div>';
+  $('m').innerHTML=h;$('fab').hidden=true;
+  const drawVals=()=>{const its=itemsOf($('ek').value);$('ev').innerHTML='<div class="meta">入れたい項目だけ入力（空欄は未記入）</div>'+its.map((i,n)=>'<div class="it"><span>'+esc(i.name)+(i.unit?' <span class="meta">('+esc(i.unit)+')</span>':'')+'</span><input id="iv'+n+'" data-n="'+esc(i.name)+'" value="'+esc(r.vals[i.name]||'')+'" '+(i.unit?'inputmode="decimal"':'')+'></div>').join('')};
+  drawVals();$('ek').onchange=()=>{r.vals={};drawVals()};
+  $('esv').onclick=()=>{
+   const vals={};$('ev').querySelectorAll('input').forEach(x=>{const v=x.value.trim();if(v!=='')vals[x.dataset.n]=v});
+   const x={id:r.id||'',date:$('ed').value,start:$('es').value,end:$('ee').value,place:$('ep').value,
+    members:[...$('m').querySelectorAll('.mem input:checked')].map(c=>c.value).join('、'),kind:$('ek').value,vals:vals,memo:$('em').value,by:me};
+   if(!x.date){msg('日付を入れてください',true);return}
+   $('esv').disabled=true;msg('保存中…');
+   call('saveRecord',[x],id=>{msg('保存しました');stack=[];$('back').hidden=true;view='list';setView('list');load()});
+  };
+ });
+}
+
+// ---- グラフ ----
+let gItem='',gDays=90,gPlace='';
+function numItems(){const s=new Set();D.records.forEach(r=>Object.keys(r.vals).forEach(k=>{if(num(r.vals[k])!==null)s.add(r.kind+'｜'+k)}));
+ const ord=D.items.map(i=>i.kind+'｜'+i.name);return [...s].sort((a,b)=>(ord.indexOf(a)+1||999)-(ord.indexOf(b)+1||999))}
+function series(key,days,place){const[k,n]=key.split('｜');const from=new Date(Date.now()-days*864e5).toISOString().slice(0,10);
+ return D.records.filter(r=>r.kind===k&&r.date>=from&&(!place||r.place===place)&&num(r.vals[n])!==null).map(r=>({d:r.date,t:r.start,v:num(r.vals[n])})).sort((a,b)=>(a.d+a.t).localeCompare(b.d+b.t))}
+function vGraph(){
+ const its=numItems();if(!gItem||!its.includes(gItem))gItem=its[0]||'';
+ let h='<div class="card noprint"><label style="margin-top:0">項目</label><select id="gi">'+its.map(x=>'<option value="'+esc(x)+'"'+(x===gItem?' selected':'')+'>'+esc(x.replace('｜',' / '))+'</option>').join('')+'</select>'+
+  '<div class="tabs" style="margin-top:10px">'+[[30,'1か月'],[90,'3か月'],[180,'半年'],[365,'1年'],[3650,'全部']].map(p=>'<button data-d="'+p[0]+'" class="'+(gDays===p[0]?'on':'')+'">'+p[1]+'</button>').join('')+'</div>'+
+  (D.places.length>1?'<select id="gp"><option value="">すべての場所</option>'+D.places.map(p=>'<option'+(gPlace===p.name?' selected':'')+'>'+esc(p.name)+'</option>').join('')+'</select>':'')+'</div>';
+ if(!gItem){$('m').innerHTML=h+'<div class="empty">数字の記録がたまるとグラフが出ます。</div>';return}
+ const s=series(gItem,gDays,gPlace),[k,n]=gItem.split('｜'),u=unitOf(k,n);
+ h+='<div class="card"><div style="font-weight:700;margin-bottom:6px">'+esc(n)+(u?' <span class="meta">('+esc(u)+')</span>':'')+'</div>'+chart(s)+'</div>';
+ if(s.length){const vs=s.map(x=>x.v);h+='<div class="card"><table><tr><th>件数</th><th>平均</th><th>最小</th><th>最大</th><th>最新</th></tr><tr><td>'+s.length+'</td><td>'+fmt(avg(vs))+'</td><td>'+fmt(Math.min(...vs))+'</td><td>'+fmt(Math.max(...vs))+'</td><td>'+fmt(vs[vs.length-1])+'</td></tr></table></div>'}
+ $('m').innerHTML=h;
+ $('gi').onchange=e=>{gItem=e.target.value;vGraph()};
+ $('m').querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{gDays=Number(b.dataset.d);vGraph()});
+ if($('gp'))$('gp').onchange=e=>{gPlace=e.target.value;vGraph()};
+}
+const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
+const fmt=v=>v==null||isNaN(v)?'-':(Math.round(v*100)/100).toLocaleString();
+function chart(s){
+ if(!s.length)return '<div class="empty">この期間の記録はありません</div>';
+ const W=640,H=260,L=46,R=12,T=12,B=34;
+ const ts=s.map(x=>new Date(x.d+'T'+(x.t||'00:00')).getTime()),vs=s.map(x=>x.v);
+ let t0=Math.min(...ts),t1=Math.max(...ts);if(t0===t1){t0-=864e5;t1+=864e5}
+ let v0=Math.min(...vs),v1=Math.max(...vs);if(v0===v1){v0-=1;v1+=1}const pad=(v1-v0)*.1;v0-=pad;v1+=pad;if(Math.min(...vs)>=0&&v0<0)v0=0;
+ const X=t=>L+(t-t0)/(t1-t0)*(W-L-R),Y=v=>T+(1-(v-v0)/(v1-v0))*(H-T-B);
+ let g='';for(let i=0;i<=4;i++){const v=v0+(v1-v0)*i/4,y=Y(v);g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'" stroke="#e6e9e7"/><text x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+fmt(v)+'</text>'}
+ for(let i=0;i<=4;i++){const t=t0+(t1-t0)*i/4,d=new Date(t);g+='<text x="'+X(t)+'" y="'+(H-12)+'" text-anchor="middle">'+(d.getMonth()+1)+'/'+d.getDate()+'</text>'}
+ const pts=s.map((x,i)=>X(ts[i]).toFixed(1)+','+Y(x.v).toFixed(1));
+ return '<svg viewBox="0 0 '+W+' '+H+'" width="100%">'+g+'<polyline fill="none" stroke="#2e6b4f" stroke-width="2" points="'+pts.join(' ')+'"/>'+
+  s.map((x,i)=>'<circle cx="'+X(ts[i]).toFixed(1)+'" cy="'+Y(x.v).toFixed(1)+'" r="3.5" fill="#2e6b4f"><title>'+x.d+' '+x.t+'　'+x.v+'</title></circle>').join('')+'</svg>';
+}
+
+// ---- ダッシュボード ----
+function vDash(){
+ const env=itemsOf('環境チェック');let h='';
+ const envRecs=D.records.filter(r=>r.kind==='環境チェック');
+ const lastEnv=envRecs[0];
+ const days=lastEnv?Math.floor((new Date(today())-new Date(lastEnv.date))/864e5):null;
+ h+='<div class="card"><div class="meta">最後の環境チェック</div><div class="val" style="margin-top:4px">'+(lastEnv?jday(lastEnv.date)+' <small>'+(days===0?'今日':days+'日前')+'　'+esc(lastEnv.members)+'</small>':'まだありません')+'</div></div>';
+ h+='<div class="day">水質（最新の値と前回との差）</div><div class="dash">';
+ let any=false;
+ env.forEach(i=>{const s=envRecs.filter(r=>num(r.vals[i.name])!==null);if(!s.length)return;any=true;
+  const a=num(s[0].vals[i.name]),b=s[1]?num(s[1].vals[i.name]):null,d=b==null?null:a-b;
+  h+='<div class="card"><div class="nm">'+esc(i.name)+'</div><div class="val">'+fmt(a)+'<small>'+esc(i.unit)+'</small></div><div class="meta">'+
+   (d==null?'前回なし':d===0?'前回と同じ':'<span class="'+(d>0?'up':'dn')+'">'+(d>0?'+':'')+fmt(d)+'</span>（前回 '+fmt(b)+'）')+'</div><div class="meta">'+esc(s[0].date.slice(5).replace('-','/'))+'</div></div>'});
+ h+='</div>';if(!any)h+='<div class="empty">環境チェックを記録すると、ここに最新の値が出ます。</div>';
+ const ym=today().slice(0,7),cnt={};D.records.filter(r=>r.date.slice(0,7)===ym).forEach(r=>cnt[r.kind]=(cnt[r.kind]||0)+1);
+ h+='<div class="day">今月の記録の件数</div><div class="card">'+(Object.keys(cnt).length?Object.keys(cnt).map(k=>'<div class="row"><span><span class="kind" style="background:'+kcol(k)+'">'+esc(k)+'</span></span><span class="val">'+cnt[k]+'<small>件</small></span></div>').join(''):'<div class="meta">今月の記録はまだありません</div>')+'</div>';
+ const hv={};D.records.filter(r=>r.kind==='収穫'&&r.date.slice(0,7)===ym).forEach(r=>Object.keys(r.vals).forEach(k=>{const v=num(r.vals[k]);if(v!==null)hv[k]=(hv[k]||0)+v}));
+ if(Object.keys(hv).length)h+='<div class="day">今月の収穫</div><div class="card">'+Object.keys(hv).map(k=>'<div class="row"><span>'+esc(k)+'</span><span class="val">'+fmt(hv[k])+'<small>'+esc(unitOf('収穫',k))+'</small></span></div>').join('')+'</div>';
+ $('m').innerHTML=h;
+}
+
+// ---- レポート（月ごと） ----
+let rMonth='';
+function vReport(){
+ const ms=[...new Set(D.records.map(r=>r.date.slice(0,7)))].sort().reverse();if(!ms.includes(today().slice(0,7)))ms.unshift(today().slice(0,7));
+ if(!rMonth)rMonth=ms[0];
+ const rs=D.records.filter(r=>r.date.slice(0,7)===rMonth);
+ let h='<div class="card noprint"><div class="grid2"><select id="rm">'+ms.map(m=>'<option value="'+m+'"'+(m===rMonth?' selected':'')+'>'+m.replace('-','年')+'月</option>').join('')+'</select><button class="btn" id="rp">印刷・PDF</button></div></div>';
+ h+='<h2 style="font-size:18px;margin:12px 2px">'+rMonth.replace('-','年')+'月のレポート</h2>';
+ h+='<div class="card"><div class="meta">記録の件数</div><table><tr><th>種類</th><th>件数</th></tr>'+kinds().map(k=>{const c=rs.filter(r=>r.kind===k).length;return c?'<tr><td>'+esc(k)+'</td><td>'+c+'</td></tr>':''}).join('')+'<tr><td><b>合計</b></td><td><b>'+rs.length+'</b></td></tr></table></div>';
+ const env=itemsOf('環境チェック').map(i=>{const vs=rs.filter(r=>r.kind==='環境チェック').map(r=>num(r.vals[i.name])).filter(v=>v!==null);return vs.length?'<tr><td>'+esc(i.name)+'</td><td>'+vs.length+'</td><td>'+fmt(avg(vs))+'</td><td>'+fmt(Math.min(...vs))+'</td><td>'+fmt(Math.max(...vs))+'</td><td>'+esc(i.unit)+'</td></tr>':''}).join('');
+ h+='<div class="card"><div class="meta">水質（環境チェック）</div>'+(env?'<table><tr><th>項目</th><th>回数</th><th>平均</th><th>最小</th><th>最大</th><th>単位</th></tr>'+env+'</table>':'<div class="meta">この月の記録はありません</div>')+'</div>';
+ ['播種','定植','収穫','給餌'].forEach(k=>{const t={};rs.filter(r=>r.kind===k).forEach(r=>Object.keys(r.vals).forEach(n=>{const v=num(r.vals[n]);if(v!==null)t[n]=(t[n]||0)+v}));
+  if(Object.keys(t).length)h+='<div class="card"><div class="meta">'+esc(k)+'（合計）</div><table><tr><th>項目</th><th>合計</th><th>単位</th></tr>'+Object.keys(t).map(n=>'<tr><td>'+esc(n)+'</td><td>'+fmt(t[n])+'</td><td>'+esc(unitOf(k,n))+'</td></tr>').join('')+'</table></div>'});
+ const memos=rs.filter(r=>r.memo).slice().reverse();
+ if(memos.length)h+='<div class="card"><div class="meta">メモ</div>'+memos.map(r=>'<div class="row" style="display:block"><div class="meta">'+esc(r.date.slice(5).replace('-','/'))+'　'+esc(r.kind)+'　'+esc(r.members)+'</div><div style="white-space:pre-wrap">'+esc(r.memo)+'</div></div>').join('')+'</div>';
+ $('m').innerHTML=h;
+ $('rm').onchange=e=>{rMonth=e.target.value;vReport()};$('rp').onclick=()=>window.print();
+}
+
+// ---- メニュー ----
+function vMenu(){
+ const it=(id,t,s)=>'<div class="card" id="'+id+'"><div><div style="font-weight:700">'+t+'</div><div class="meta">'+s+'</div></div><span class="meta">＞</span></div>';
+ $('m').innerHTML='<div class="menu">'+
+  '<div class="card" style="display:block;cursor:default"><label style="margin-top:0">この端末で使う人（記録・コメントの名前になります）</label><select id="me"><option value="">選んでください</option>'+D.members.map(m=>'<option'+(m.name===me?' selected':'')+'>'+esc(m.name)+'</option>').join('')+'</select></div>'+
+  it('mp','場所（地図）',D.places.length+'か所')+it('mi','記録項目の設定',D.items.length+'項目')+it('mm','メンバー',D.members.length+'人')+
+  it('mc','CSVダウンロード','記録をすべてCSVで保存')+(D.ssUrl?it('ms','元データ（スプレッドシート）','Googleスプレッドシートで開く'):'')+'</div>';
+ $('me').onchange=e=>{me=e.target.value;try{localStorage.setItem('aqpMe',me)}catch(x){}msg('「'+(me||'未設定')+'」にしました')};
+ $('mp').onclick=vPlaces;$('mi').onclick=vItems;$('mm').onclick=vMembers;$('mc').onclick=csv;
+ if($('ms'))$('ms').onclick=()=>window.open(D.ssUrl,'_blank');
+}
+function vPlaces(){sub('場所',()=>{
+ $('fab').hidden=true;
+ $('m').innerHTML=D.places.map((p,i)=>{const la=num(p.lat),ln=num(p.lng),d=.0015;
+  return '<div class="card">'+(la!==null&&ln!==null?'<iframe loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox='+(ln-d)+','+(la-d)+','+(ln+d)+','+(la+d)+'&layer=mapnik&marker='+la+','+ln+'"></iframe>':'')+
+  '<h3 style="margin:10px 0 4px">'+esc(p.name)+'</h3><div class="meta">面積：'+esc(p.area)+'㎡　タイプ：'+esc(p.type)+'<br>'+esc(p.addr)+(p.note?'<br>進捗：'+esc(p.note):'')+'</div>'+
+  '<div class="acts">'+(la!==null?'<a class="btn" target="_blank" href="https://www.google.com/maps?q='+la+','+ln+'">地図アプリで開く</a>':'')+'<span class="sp"></span><button class="btn" data-e="'+i+'">編集</button><button class="btn pri" data-r="'+esc(p.name)+'">記録する</button></div></div>'}).join('')+
+  '<div class="acts"><span class="sp"></span><button class="btn" id="pa">場所を追加</button></div>';
+ $('m').querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>editPlace(Number(b.dataset.e)));
+ $('m').querySelectorAll('[data-r]').forEach(b=>b.onclick=()=>{editRec(null);setTimeout(()=>{$('ep').value=b.dataset.r},0)});
+ $('pa').onclick=()=>editPlace(-1);
+})}
+function editPlace(i){const p=i>=0?D.places[i]:{name:'',area:'',type:'アクアポニックス',addr:'',lat:'',lng:'',note:''};
+ sub(i>=0?'場所の編集':'場所の追加',()=>{
+  const f=[['name','名前'],['area','面積（㎡）'],['type','タイプ'],['addr','住所'],['lat','緯度（例 35.1557）'],['lng','経度（例 139.6347）'],['note','進捗']];
+  $('m').innerHTML='<div class="card">'+f.map(x=>'<label>'+x[1]+'</label><input id="pf_'+x[0]+'" value="'+esc(p[x[0]])+'">').join('')+
+   '<div class="meta" style="margin-top:8px">緯度・経度はGoogleマップで場所を長押しすると出ます。</div></div><div class="acts">'+(i>=0?'<button class="btn warn" id="pdl">この場所を消す</button>':'')+'<span class="sp"></span><button class="btn pri" id="psv">保存</button></div>';
+  $('fab').hidden=true;
+  $('psv').onclick=()=>{const n={};f.forEach(x=>n[x[0]]=$('pf_'+x[0]).value.trim());if(!n.name){msg('名前を入れてください',true);return}
+   const list=D.places.slice();if(i>=0)list[i]=n;else list.push(n);call('savePlaces',[list],()=>{D.places=list;msg('保存しました');$('back').click()})};
+  if($('pdl'))$('pdl').onclick=()=>{if(!confirm('この場所を消しますか？（記録は残ります）'))return;const list=D.places.filter((_,j)=>j!==i);call('savePlaces',[list],()=>{D.places=list;msg('消しました');$('back').click()})};
+ })}
+let iKind='';
+function vItems(){sub('記録項目の設定',()=>{
+ $('fab').hidden=true;const ks=kinds();if(!iKind||!ks.includes(iKind))iKind=ks[0]||'';
+ const its=itemsOf(iKind);
+ $('m').innerHTML='<div class="tabs">'+ks.map(k=>'<button data-k="'+esc(k)+'" class="'+(k===iKind?'on':'')+'">'+esc(k)+' '+itemsOf(k).length+'</button>').join('')+'<button id="kn">＋種類を追加</button></div>'+
+  '<div class="card"><div class="meta">記録するときに選べる項目です。上下で並べ替え、単位とタグは直接書きかえられます。</div>'+
+  its.map((x,n)=>'<div class="row" style="flex-wrap:wrap"><input data-f="name" data-n="'+n+'" value="'+esc(x.name)+'" style="flex:1 1 100%"><input data-f="unit" data-n="'+n+'" value="'+esc(x.unit)+'" placeholder="単位" style="flex:1"><input data-f="tag" data-n="'+n+'" value="'+esc(x.tag)+'" placeholder="タグ" style="flex:1">'+
+   '<button class="lnk" data-u="'+n+'">上</button><button class="lnk" data-dn="'+n+'">下</button><button class="lnk" data-x="'+n+'" style="color:#b03a2e">削除</button></div>').join('')+
+  '<div class="acts"><button class="btn" id="ia">項目を追加</button><span class="sp"></span><button class="btn pri" id="isv">保存</button></div></div>';
+ const cur=its.map(x=>Object.assign({},x));
+ const read=()=>$('m').querySelectorAll('[data-f]').forEach(e=>cur[Number(e.dataset.n)][e.dataset.f]=e.value.trim());
+ const commit=(fn)=>{read();fn();const rest=D.items.filter(x=>x.kind!==iKind);cur.forEach((x,i)=>x.ord=i+1);D.items=rest.concat(cur.filter(x=>x.name));curFn()};
+ $('m').querySelectorAll('.tabs [data-k]').forEach(b=>b.onclick=()=>{iKind=b.dataset.k;curFn()});
+ $('kn').onclick=()=>{const k=prompt('新しい種類の名前（例：水温の測定、病害虫）');if(!k)return;D.items.push({kind:k,name:'項目1',tag:'',unit:'',ord:1});iKind=k;curFn()};
+ $('m').querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>commit(()=>{const n=Number(b.dataset.u);if(n>0)[cur[n-1],cur[n]]=[cur[n],cur[n-1]]}));
+ $('m').querySelectorAll('[data-dn]').forEach(b=>b.onclick=()=>commit(()=>{const n=Number(b.dataset.dn);if(n<cur.length-1)[cur[n+1],cur[n]]=[cur[n],cur[n+1]]}));
+ $('m').querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>commit(()=>cur.splice(Number(b.dataset.x),1)));
+ $('ia').onclick=()=>commit(()=>cur.push({kind:iKind,name:'新しい項目',tag:(cur[0]||{}).tag||'',unit:'',ord:0}));
+ $('isv').onclick=()=>{commit(()=>{});call('saveItems',[D.items],()=>msg('保存しました'))};
+})}
+function vMembers(){sub('メンバー',()=>{
+ $('fab').hidden=true;const cur=D.members.map(m=>Object.assign({},m));
+ $('m').innerHTML='<div class="card">'+cur.map((m,n)=>'<div class="row"><input data-f="name" data-n="'+n+'" value="'+esc(m.name)+'" style="flex:2"><select data-f="role" data-n="'+n+'" style="flex:1">'+['マネージャー','メンバー'].map(r=>'<option'+(r===m.role?' selected':'')+'>'+r+'</option>').join('')+'</select><button class="lnk" data-x="'+n+'" style="color:#b03a2e">削除</button></div>').join('')+
+  '<div class="acts"><button class="btn" id="ma">メンバーを追加</button><span class="sp"></span><button class="btn pri" id="msv">保存</button></div></div>'+
+  '<div class="meta">メンバーを招待するときは、このページのURL（合言葉つき）を送ってください。</div>';
+ const read=()=>$('m').querySelectorAll('[data-f]').forEach(e=>cur[Number(e.dataset.n)][e.dataset.f]=e.value.trim());
+ $('m').querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{read();cur.splice(Number(b.dataset.x),1);D.members=cur;curFn()});
+ $('ma').onclick=()=>{read();cur.push({name:'',role:'メンバー'});D.members=cur;curFn()};
+ $('msv').onclick=()=>{read();const list=cur.filter(m=>m.name);call('saveMembers',[list],()=>{D.members=list;msg('保存しました')})};
+})}
+function csv(){
+ const names=[];D.items.forEach(i=>{if(!names.includes(i.name))names.push(i.name)});D.records.forEach(r=>Object.keys(r.vals).forEach(k=>{if(!names.includes(k))names.push(k)}));
+ const used=names.filter(n=>D.records.some(r=>(r.vals[n]||'')!==''));
+ const q=s=>'"'+String(s==null?'':s).replace(/"/g,'""')+'"';
+ const lines=[['日付','開始','終了','場所','メンバー','種類'].concat(used,['メモ','登録者','登録日時']).map(q).join(',')];
+ D.records.slice().reverse().forEach(r=>lines.push([r.date,r.start,r.end,r.place,r.members,r.kind].concat(used.map(n=>r.vals[n]||''),[r.memo,r.by,r.at]).map(q).join(',')));
+ const b=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv'}),a=document.createElement('a');
+ a.href=URL.createObjectURL(b);a.download='アクアポニックス記録_'+today()+'.csv';document.body.appendChild(a);a.click();a.remove();
+}
+load();
+</script>
+</body></html>
